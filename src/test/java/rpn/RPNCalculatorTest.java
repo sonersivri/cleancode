@@ -1,9 +1,23 @@
 package rpn;
 
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class RPNCalculatorTest {
+
+  static Stream<Arguments> checkMultiArgumentsMethodSource() {
+
+    return Stream.of(Arguments.of("1, 2, 3, +, -", -4.0),
+        Arguments.of("6, 2, *, 3, /", 4),
+        Arguments.of("2, 3, ^, 4, 5, +, +", 17),
+        Arguments.of("3, !, 4, 5, *, +", 26),
+        Arguments.of("12, 3, /, !", 24),
+        Arguments.of("5, 1, 2, +, 4, *, +, 3, -", 14));
+  }
 
   @Test
   void should_throw_exception_when_empty_input() {
@@ -36,6 +50,10 @@ class RPNCalculatorTest {
     Assertions.assertEquals(-4.0, RPNCalculator.calculate("1", "2", "3", "+", "-"));
   }
 
+  @Test
+  void should_calculate_rpn_given_valid_inputs34() throws InvalidInputException {
+    Assertions.assertEquals(-4.0, RPNCalculator.calculate("1", "2", "3", "+", "-"));
+  }
 
   @Test
   void should_throw_exception_when_dividing_by_zero() {
@@ -110,5 +128,12 @@ class RPNCalculatorTest {
 
     Assertions.assertEquals(RPNCalculator.COUNT_OF_OPERANDS_CANNOT_BE_GREATER_THAN_COUNT_OF_NUMBERS,
         invalidInputException.getMessage());
+  }
+
+  @ParameterizedTest
+  @MethodSource("checkMultiArgumentsMethodSource")
+  void should_correctly_evaluate_rpn_values(String input, double expected)
+      throws InvalidInputException {
+    Assertions.assertEquals(expected, RPNCalculator.calculate(input.split(", ")));
   }
 }
