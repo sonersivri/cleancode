@@ -1,45 +1,51 @@
 package rpn;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Deque;
-import java.util.EmptyStackException;
+import java.util.List;
 
 public class RPNCalculator {
 
+  public static final String NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS = "Number of operands cannot be equal to numbers";
+  public static final String DIVISION_BY_ZERO_IS_NOT_ALLOWED = "Division by zero is not allowed";
+  public static final String MODULO_BY_ZERO_IS_NOT_ALLOWED = "Modulo by zero is not allowed";
+  public static final String UNSUPPORTED_OPERATOR = "Unsupported operator: ";
+
   private RPNCalculator() {
-    // not really required
+    // not really required for now
   }
 
   public static double calculate(String... inputs) throws InvalidInputException {
     try {
-      validateInput(inputs);
       return evaluateRPN(inputs);
     } catch (Exception e) {
-      throw new InvalidInputException("Invalid Input: " + Arrays.toString(inputs));
+      throw new InvalidInputException(e.getMessage(), e);
     }
   }
 
 
-  public static double evaluateRPN(String[] tokens) throws EmptyStackException {
+  public static double evaluateRPN(String[] inputs) throws InvalidInputException {
 
-    if (tokens.length == 1 && isValidNumber(tokens[0])) {
-      return Double.parseDouble(tokens[0]);
+    validateInput(inputs);
+
+    if (inputs.length == 1 && isValidNumber(inputs[0])) {
+      return Double.parseDouble(inputs[0]);
     }
 
-    Deque<Double> stack = new ArrayDeque<>();
+    Deque<Double> queue = new ArrayDeque<>();
 
-    for (String token : tokens) {
+    for (String token : inputs) {
       if (isValidNumber(token)) {
-        stack.push(Double.parseDouble(token));
+        queue.push(Double.parseDouble(token));
       } else {
-        double operand2 = stack.pop();
-        double operand1 = stack.pop();
+        double operand2 = queue.pop();
+        double operand1 = queue.pop();
         double result = performCalculation(operand1, operand2, token);
-        stack.push(result);
+        queue.push(result);
       }
     }
-    return stack.pop();
+    return queue.pop();
   }
 
   private static boolean isValidNumber(String str) {
@@ -60,15 +66,35 @@ public class RPNCalculator {
       case "*":
         return operand1 * operand2;
       case "/":
+        if (operand2 == 0) {
+          throw new ArithmeticException(DIVISION_BY_ZERO_IS_NOT_ALLOWED);
+        }
         return operand1 / operand2;
+      case "%":
+        if (operand2 == 0) {
+          throw new ArithmeticException(MODULO_BY_ZERO_IS_NOT_ALLOWED);
+        }
+        return operand1 % operand2;
       default:
-        throw new IllegalArgumentException("Unsupported operator: " + operator);
+        throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + operator);
+
     }
   }
 
-  static void validateInput(String... inputs) {
-    if (inputs == null || inputs.length == 0) {
-      throw new EmptyStackException();
+  static void validateInput(String... inputs) throws InvalidInputException {
+    List<String> numbers = new ArrayList<>();
+    List<String> operands = new ArrayList<>();
+
+    for (String token : inputs) {
+      if (isValidNumber(token)) {
+        numbers.add(token);
+      } else {
+        operands.add(token);
+      }
+    }
+
+    if (numbers.size() == operands.size()) {
+      throw new InvalidInputException(NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS);
     }
   }
 }

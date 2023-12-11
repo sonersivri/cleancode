@@ -19,7 +19,6 @@ class RPNCalculatorTest {
     });
   }
 
-  // "4"
   @Test
   void should_return_input_when_input_is_just_one_number() throws InvalidInputException {
     Assertions.assertEquals(4.5D, RPNCalculator.calculate("4.5"));
@@ -35,5 +34,49 @@ class RPNCalculatorTest {
   @Test
   void should_calculate_rpn_given_valid_inputs() throws InvalidInputException {
     Assertions.assertEquals(-4.0, RPNCalculator.calculate("1", "2", "3", "+", "-"));
+  }
+
+  @Test
+  void should_throw_exception_when_dividing_by_zero() {
+    final InvalidInputException invalidInputException = Assertions.assertThrows(
+        InvalidInputException.class, () -> {
+          RPNCalculator.calculate("0", "0", "0", "/", "-");
+        });
+
+    Assertions.assertEquals(RPNCalculator.DIVISION_BY_ZERO_IS_NOT_ALLOWED,
+        invalidInputException.getMessage());
+  }
+
+  @Test
+  void should_throw_exception_when_modulo_by_zero() {
+    final InvalidInputException invalidInputException = Assertions.assertThrows(
+        InvalidInputException.class, () -> {
+          RPNCalculator.calculate("0", "0", "0", "%", "-");
+        });
+
+    Assertions.assertEquals(RPNCalculator.MODULO_BY_ZERO_IS_NOT_ALLOWED,
+        invalidInputException.getMessage());
+  }
+
+  @Test
+  void should_throw_exception_when_unsupported_operator_in_input() {
+    final InvalidInputException invalidInputException = Assertions.assertThrows(
+        InvalidInputException.class, () -> {
+          RPNCalculator.calculate("0", "0", "0", "_", "-");
+        });
+
+    Assertions.assertTrue(
+        invalidInputException.getMessage().startsWith(RPNCalculator.UNSUPPORTED_OPERATOR));
+  }
+
+  @Test
+  void should_calculate_rpn_given_valid_inputs2() {
+    InvalidInputException invalidInputException = Assertions.assertThrows(
+        InvalidInputException.class, () -> {
+          RPNCalculator.calculate("1", "2", "3", "+", "-", "%");
+        });
+
+    Assertions.assertEquals(RPNCalculator.NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS,
+        invalidInputException.getMessage());
   }
 }
