@@ -6,6 +6,9 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import rpn.operation.AddOperation;
+import rpn.operation.MultiplyOperation;
+import rpn.operation.SubtractionOperation;
 
 public class RPNCalculator {
 
@@ -19,9 +22,11 @@ public class RPNCalculator {
   private Map<String, RPNCalculationUnaryStrategy> strategyUnaryMap = new HashMap<>();
 
   public RPNCalculator() {
-    strategyBinaryMap.put("+", new AddCalculationStrategy());
-    strategyBinaryMap.put("*", new MultiplyCalculatorStrategy());
+    strategyBinaryMap.put("+", new AddOperation());
+    strategyBinaryMap.put("*", new MultiplyOperation());
+    strategyBinaryMap.put("-", new SubtractionOperation());
   }
+
   public double calculate(String... inputs) throws InvalidInputException {
     try {
       return evaluateRPN(inputs);
@@ -45,9 +50,11 @@ public class RPNCalculator {
       if (isValidNumber(token)) {
         queue.push(Double.parseDouble(token));
       } else  if (strategyBinaryMap.containsKey(token)) {
-        queue.push(strategyBinaryMap.get(token).calculate(queue.pop(), queue.pop()));
+        queue.push(strategyBinaryMap.get(token)
+            .calculate(queue.pop(), queue.pop()));
       } else  if (strategyUnaryMap.containsKey(token)) {
-        queue.push(strategyUnaryMap.get(token).calculate((queue.pop()));
+        queue.push(strategyUnaryMap.get(token)
+            .calculate((queue.pop())));
       }
     }
     return queue.pop();

@@ -95,8 +95,38 @@ class RPNCalculatorTest {
   }
 
   @Test
+  void should_calculate_addition_with_signed_values() throws InvalidInputException {
+    Assertions.assertEquals(0.0D, new RPNCalculator().calculate("-2","2", "+"));
+  }
+
+  @Test
+  void should_calculate_addition_with_signed_values2() throws InvalidInputException {
+    Assertions.assertEquals(0.0D, new RPNCalculator().calculate("2","-2", "+"));
+  }
+
+  @Test
+  void should_calculate_addition_with_signed_values3() throws InvalidInputException {
+    Assertions.assertEquals(1.0D, new RPNCalculator().calculate("-2","3", "+"));
+  }
+
+  @Test
+  void should_calculate_addition_with_signed_values4() throws InvalidInputException {
+    Assertions.assertEquals(-2.0D, new RPNCalculator().calculate("-5","3", "+"));
+  }
+
+  @Test
   void should_calculate_subtraction() throws InvalidInputException {
     Assertions.assertEquals(4.0D, new RPNCalculator().calculate("6","2", "-"));
+  }
+
+  @Test
+  void should_calculate_subtraction_with_signed_values() throws InvalidInputException {
+    Assertions.assertEquals(-4.0D, new RPNCalculator().calculate("-2","2", "-"));
+  }
+
+  @Test
+  void should_calculate_subtraction_with_signed_values2() throws InvalidInputException {
+    Assertions.assertEquals(-7.0D, new RPNCalculator().calculate("-5","2", "-"));
   }
 
   @Test
