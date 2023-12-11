@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import rpn.operation.AddOperation;
 import rpn.operation.DivisionOperation;
+import rpn.operation.ModuloOperation;
 import rpn.operation.MultiplyOperation;
+import rpn.operation.PowerOperation;
 import rpn.operation.SubtractionOperation;
 
 public class RPNCalculator {
@@ -27,39 +29,39 @@ public class RPNCalculator {
     strategyBinaryMap.put("*", new MultiplyOperation());
     strategyBinaryMap.put("-", new SubtractionOperation());
     strategyBinaryMap.put("/", new DivisionOperation());
+    strategyBinaryMap.put("%", new ModuloOperation());
+    strategyBinaryMap.put("^", new PowerOperation());
   }
 
   public double calculate(String... inputs) throws InvalidInputException {
     try {
-      return evaluateRPN(inputs);
-    } catch (Exception e) {
-      throw new InvalidInputException(e.getMessage(), e);
-    }
-  }
+      validateInput(inputs);
 
-
-  public double evaluateRPN(String[] inputs) throws InvalidInputException {
-
-    validateInput(inputs);
-
-    if (inputs.length == 1 && isValidNumber(inputs[0])) {
-      return Double.parseDouble(inputs[0]);
-    }
-
-    Deque<Double> queue = new ArrayDeque<>();
-
-    for (String token : inputs) {
-      if (isValidNumber(token)) {
-        queue.push(Double.parseDouble(token));
-      } else  if (strategyBinaryMap.containsKey(token)) {
-        queue.push(strategyBinaryMap.get(token)
-            .calculate(queue.pop(), queue.pop()));
-      } else  if (strategyUnaryMap.containsKey(token)) {
-        queue.push(strategyUnaryMap.get(token)
-            .calculate((queue.pop())));
+      if (inputs.length == 1 && isValidNumber(inputs[0])) {
+        return Double.parseDouble(inputs[0]);
       }
+
+      Deque<Double> queue = new ArrayDeque<>();
+
+      for (String token : inputs) {
+        if (isValidNumber(token)) {
+          queue.push(Double.parseDouble(token));
+        } else if (strategyBinaryMap.containsKey(token)) {
+          queue.push(strategyBinaryMap.get(token).calculate(queue.pop(), queue.pop()));
+        } else if (strategyUnaryMap.containsKey(token)) {
+          queue.push(strategyUnaryMap.get(token).calculate((queue.pop())));
+        } else {
+          throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + token);
+        }
+
+      }
+      return queue.pop();
+    } catch (InvalidInputException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new InvalidInputException(e.getMessage());
     }
-    return queue.pop();
+
   }
 
   private boolean isValidNumber(String str) {
@@ -70,36 +72,6 @@ public class RPNCalculator {
       return false;
     }
   }
-
-  private double performCalculation(double operand1, double operand2, String operator) {
-    strategyBinaryMap.get(operator).calculate(operand1, operand2);
-    switch (operator) {
-      case "+":
-        return operand1 + operand2;
-      case "-":
-        return operand1 - operand2;
-      case "*":
-        return operand1 * operand2;
-      case "/":
-        if (operand2 == 0) {
-          throw new ArithmeticException(DIVISION_BY_ZERO_IS_NOT_ALLOWED);
-        }
-        return operand1 / operand2;
-      case "%":
-        if (operand2 == 0) {
-          throw new ArithmeticException(MODULO_BY_ZERO_IS_NOT_ALLOWED);
-        }
-        return operand1 % operand2;
-      case "^":
-        return Math.pow(operand1, operand2);
-      case "!":
-         return 0.0;
-      default:
-        throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + operator);
-    }
-  }
-
-
 
   void validateInput(String... inputs) throws InvalidInputException {
     List<String> numbers = new ArrayList<>();
