@@ -54,7 +54,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        String[] expression = {"1", "%"};
+        String[] expression = {"", "3"};
         // 2 + 3 = 1 - 5 = 4
         int result = evaluateRPN(expression);
         System.out.println("Result: " + result);
