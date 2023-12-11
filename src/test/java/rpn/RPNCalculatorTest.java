@@ -71,6 +71,26 @@ class RPNCalculatorTest {
   }
 
   @Test
+  void should_calculate_addition() throws InvalidInputException {
+    Assertions.assertEquals(4.0D, RPNCalculator.calculate("2","2", "+"));
+  }
+
+  @Test
+  void should_calculate_subtraction() throws InvalidInputException {
+    Assertions.assertEquals(4.0D, RPNCalculator.calculate("6","2", "-"));
+  }
+
+  @Test
+  void should_calculate_division() throws InvalidInputException {
+    Assertions.assertEquals(4.0D, RPNCalculator.calculate("8","2", "/"));
+  }
+
+  @Test
+  void should_calculate_multiplication() throws InvalidInputException {
+    Assertions.assertEquals(4.0D, RPNCalculator.calculate("2","2", "*"));
+  }
+
+  @Test
   void should_calculate_rpn_given_valid_inputs2() {
     InvalidInputException invalidInputException = Assertions.assertThrows(
         InvalidInputException.class, () -> {
