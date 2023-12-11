@@ -76,11 +76,16 @@ public class RPNCalculator {
           throw new ArithmeticException(MODULO_BY_ZERO_IS_NOT_ALLOWED);
         }
         return operand1 % operand2;
+      case "^":
+        return Math.pow(operand1, operand2);
+      case "!":
+         return 0.0;
       default:
         throw new IllegalArgumentException(UNSUPPORTED_OPERATOR + operator);
-
     }
   }
+
+
 
   static void validateInput(String... inputs) throws InvalidInputException {
     List<String> numbers = new ArrayList<>();
@@ -94,9 +99,9 @@ public class RPNCalculator {
       }
     }
 
-    if (numbers.size() == operands.size()) {
-      throw new InvalidInputException(NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS);
-    }
+//    if (numbers.size() == operands.size()) {
+//      throw new InvalidInputException(NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS);
+//    }
 
     if (operands.size() > numbers.size()) {
       throw new InvalidInputException(COUNT_OF_OPERANDS_CANNOT_BE_GREATER_THAN_COUNT_OF_NUMBERS);
