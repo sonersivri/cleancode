@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import rpn.operation.AddOperation;
+import rpn.operation.DivisionOperation;
 import rpn.operation.MultiplyOperation;
 import rpn.operation.SubtractionOperation;
 
@@ -25,6 +26,7 @@ public class RPNCalculator {
     strategyBinaryMap.put("+", new AddOperation());
     strategyBinaryMap.put("*", new MultiplyOperation());
     strategyBinaryMap.put("-", new SubtractionOperation());
+    strategyBinaryMap.put("/", new DivisionOperation());
   }
 
   public double calculate(String... inputs) throws InvalidInputException {

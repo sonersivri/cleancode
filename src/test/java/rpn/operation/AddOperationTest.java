@@ -1,4 +1,4 @@
-package rpn;
+package rpn.operation;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +12,8 @@ public class AddOperationTest {
 
     static Stream<Arguments> checkMultiArgumentsMethodSource() {
 
-        return Stream.of(Arguments.of(0,0,0),
+        return Stream.of(
+                Arguments.of(0,0,0),
                 Arguments.of(0,1,1),
                 Arguments.of(1,0,1),
                 Arguments.of(3,2,5),
