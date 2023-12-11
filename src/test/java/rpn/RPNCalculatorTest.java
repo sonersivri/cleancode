@@ -24,6 +24,6 @@ public class RPNCalculatorTest {
     // "4"
     @Test
     void should_one_numeric_input_returns_input() {
-        Assertions.assertEquals(4D, RPNCalculator.calculate("4"));
+        Assertions.assertEquals(4.5D, RPNCalculator.calculate("4.5"));
     }
 }
