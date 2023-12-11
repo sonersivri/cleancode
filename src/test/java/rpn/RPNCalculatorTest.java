@@ -36,6 +36,7 @@ class RPNCalculatorTest {
     Assertions.assertEquals(-4.0, RPNCalculator.calculate("1", "2", "3", "+", "-"));
   }
 
+
   @Test
   void should_throw_exception_when_dividing_by_zero() {
     final InvalidInputException invalidInputException = Assertions.assertThrows(
@@ -77,6 +78,17 @@ class RPNCalculatorTest {
         });
 
     Assertions.assertEquals(RPNCalculator.NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS,
+        invalidInputException.getMessage());
+  }
+
+  @Test
+  void should_throw_exception_when_count_of_operator_is_greater_than_numbers() {
+    InvalidInputException invalidInputException = Assertions.assertThrows(
+        InvalidInputException.class, () -> {
+          RPNCalculator.calculate("1", "2", "-", "+", "-");
+        });
+
+    Assertions.assertEquals(RPNCalculator.COUNT_OF_OPERANDS_CANNOT_BE_GREATER_THAN_COUNT_OF_NUMBERS,
         invalidInputException.getMessage());
   }
 }

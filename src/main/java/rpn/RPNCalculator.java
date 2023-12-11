@@ -11,6 +11,7 @@ public class RPNCalculator {
   public static final String DIVISION_BY_ZERO_IS_NOT_ALLOWED = "Division by zero is not allowed";
   public static final String MODULO_BY_ZERO_IS_NOT_ALLOWED = "Modulo by zero is not allowed";
   public static final String UNSUPPORTED_OPERATOR = "Unsupported operator: ";
+  public static final String COUNT_OF_OPERANDS_CANNOT_BE_GREATER_THAN_COUNT_OF_NUMBERS = "Count of operands cannot be greater than count of Numbers";
 
   private RPNCalculator() {
     // not really required for now
@@ -95,6 +96,10 @@ public class RPNCalculator {
 
     if (numbers.size() == operands.size()) {
       throw new InvalidInputException(NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS);
+    }
+
+    if (operands.size() > numbers.size()) {
+      throw new InvalidInputException(COUNT_OF_OPERANDS_CANNOT_BE_GREATER_THAN_COUNT_OF_NUMBERS);
     }
   }
 }
