@@ -15,7 +15,6 @@ import rpn.operation.SubtractionOperation;
 
 public class RPNCalculator {
 
-  public static final String NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS = "Number of operands cannot be equal to numbers";
   public static final String UNSUPPORTED_OPERATOR = "Unsupported operator: ";
 
   private final Map<String, RPNCalculationStrategy> strategyMap = new HashMap<>();
@@ -36,8 +35,9 @@ public class RPNCalculator {
     strategyMap.put("!", new FactorialOperation());
   }
 
-  public double calculate(String... inputs) throws InvalidInputException {
+  public double calculate(String input) throws InvalidInputException {
     try {
+      String[] inputs = input.split(",");
 
       if (inputs.length == 1 && isValidNumber(inputs[0])) {
         return Double.parseDouble(inputs[0]);
@@ -46,6 +46,7 @@ public class RPNCalculator {
       Deque<Double> queue = new ArrayDeque<>();
 
       for (String token : inputs) {
+        token = token.trim();
 
         if (isValidNumber(token)) {
           queue.push(Double.parseDouble(token));
@@ -68,6 +69,7 @@ public class RPNCalculator {
 
     } catch (InvalidInputException | IllegalArgumentException e) {
       throw e;
+
     }  catch (Exception e) {
       throw new InvalidInputException(e);
     }

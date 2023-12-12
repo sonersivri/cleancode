@@ -11,18 +11,18 @@ class RPNCalculatorTest {
 
   static Stream<Arguments> checkMultiArgumentsMethodSource() {
 
-    return Stream.of(Arguments.of("1, 2, 3, +, -", -4.0),
-        Arguments.of("6, 2, *, 3, /", 4),
-        Arguments.of("2, 3, ^, 4, 5, +, +", 17),
+    return Stream.of(Arguments.of("1, 2, 3, +, -",-4.0),
+        Arguments.of("6, 2, *, 3, /",4),
+        Arguments.of("2, 3, ^, 4, 5, +, +" ,17),
         Arguments.of("3, !, 4, 5, *, +", 26),
-        Arguments.of("12, 3, /, !", 24),
-        Arguments.of("5, 1, 2, +, 4, *, +, 3, -", 14));
+        Arguments.of("12, 3, /, !",24),
+        Arguments.of("5, 1, 2, +, 4, *, +, 3, -",14));
   }
 
   @Test
   void should_throw_exception_when_empty_input() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      new RPNCalculator().calculate("", "");
+    Assertions.assertThrows(InvalidInputException.class, () -> {
+      new RPNCalculator().calculate(",");
     });
   }
 
@@ -41,25 +41,25 @@ class RPNCalculatorTest {
   @Test
   void should_throw_exception_when_invalid_input_given() {
     Assertions.assertThrows(InvalidInputException.class, () -> {
-      new RPNCalculator().calculate("2", "+", "2");
+      new RPNCalculator().calculate("2,+,2");
     });
   }
 
   @Test
   void should_calculate_rpn_given_valid_inputs() throws InvalidInputException {
-    Assertions.assertEquals(-4.0, new RPNCalculator().calculate("1", "2", "3", "+", "-"));
+    Assertions.assertEquals(-4.0, new RPNCalculator().calculate("1,2,3,+,-"));
   }
 
   @Test
   void should_calculate_rpn_given_valid_inputs34() throws InvalidInputException {
-    Assertions.assertEquals(-4.0, new RPNCalculator().calculate("1", "2", "3", "+", "-"));
+    Assertions.assertEquals(-4.0, new RPNCalculator().calculate("1,2,3,+,-"));
   }
 
   @Test
   void should_throw_exception_when_dividing_by_zero() {
     final InvalidInputException invalidInputException = Assertions.assertThrows(
         InvalidInputException.class, () -> {
-              new RPNCalculator().calculate("0", "0", "0", "/", "-");
+              new RPNCalculator().calculate("0,0,0,/,-");
         });
 
     Assertions.assertEquals("java.lang.ArithmeticException: Division by zero is not allowed",
@@ -70,7 +70,7 @@ class RPNCalculatorTest {
   void should_throw_exception_when_unsupported_operator_in_input() {
     final IllegalArgumentException invalidInputException = Assertions.assertThrows(
             IllegalArgumentException.class, () -> {
-              new RPNCalculator().calculate("0", "0", "0", "_", "-");
+              new RPNCalculator().calculate("0,0,0,_,-");
         });
 
     Assertions.assertTrue(
@@ -79,59 +79,59 @@ class RPNCalculatorTest {
 
   @Test
   void should_calculate_addition() throws InvalidInputException {
-    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("2","2", "+"));
+    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("2,2,+"));
   }
 
   @Test
   void should_calculate_addition_with_signed_values() throws InvalidInputException {
-    Assertions.assertEquals(0.0D, new RPNCalculator().calculate("-2","2", "+"));
+    Assertions.assertEquals(0.0D, new RPNCalculator().calculate("-2,2,+"));
   }
 
   @Test
   void should_calculate_addition_with_signed_values2() throws InvalidInputException {
-    Assertions.assertEquals(0.0D, new RPNCalculator().calculate("2","-2", "+"));
+    Assertions.assertEquals(0.0D, new RPNCalculator().calculate("2,-2,+"));
   }
 
   @Test
   void should_calculate_addition_with_signed_values3() throws InvalidInputException {
-    Assertions.assertEquals(1.0D, new RPNCalculator().calculate("-2","3", "+"));
+    Assertions.assertEquals(1.0D, new RPNCalculator().calculate("-2,3,+"));
   }
 
   @Test
   void should_calculate_addition_with_signed_values4() throws InvalidInputException {
-    Assertions.assertEquals(-2.0D, new RPNCalculator().calculate("-5","3", "+"));
+    Assertions.assertEquals(-2.0D, new RPNCalculator().calculate("-5,3,+"));
   }
 
   @Test
   void should_calculate_subtraction() throws InvalidInputException {
-    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("6","2", "-"));
+    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("6,2,-"));
   }
 
   @Test
   void should_calculate_subtraction_with_signed_values() throws InvalidInputException {
-    Assertions.assertEquals(-4.0D, new RPNCalculator().calculate("-2","2", "-"));
+    Assertions.assertEquals(-4.0D, new RPNCalculator().calculate("-2,2,-"));
   }
 
   @Test
   void should_calculate_subtraction_with_signed_values2() throws InvalidInputException {
-    Assertions.assertEquals(-7.0D, new RPNCalculator().calculate("-5","2", "-"));
+    Assertions.assertEquals(-7.0D, new RPNCalculator().calculate("-5,2,-"));
   }
 
   @Test
   void should_calculate_division() throws InvalidInputException {
-    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("8","2", "/"));
+    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("8,2,/"));
   }
 
   @Test
   void should_calculate_multiplication() throws InvalidInputException {
-    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("2","2", "*"));
+    Assertions.assertEquals(4.0D, new RPNCalculator().calculate("2,2,*"));
   }
 
   @Test
   void should_calculate_rpn_given_valid_inputs2() {
     InvalidInputException invalidInputException = Assertions.assertThrows(
         InvalidInputException.class, () -> {
-              new RPNCalculator().calculate("1", "2", "3", "+", "-", "%");
+              new RPNCalculator().calculate("1,2,3,+,-,%");
         });
 
     Assertions.assertEquals("java.util.NoSuchElementException",
@@ -142,7 +142,7 @@ class RPNCalculatorTest {
   void should_throw_exception_when_count_of_operator_is_greater_than_numbers() {
     InvalidInputException invalidInputException = Assertions.assertThrows(
         InvalidInputException.class, () -> {
-              new RPNCalculator().calculate("1", "2", "-", "+", "-");
+              new RPNCalculator().calculate("1,2,-,+,-");
         });
 
     Assertions.assertEquals("java.util.NoSuchElementException",
@@ -153,7 +153,7 @@ class RPNCalculatorTest {
   @MethodSource("checkMultiArgumentsMethodSource")
   void should_correctly_evaluate_rpn_values(String input, double expected)
       throws InvalidInputException {
-    Assertions.assertEquals(expected, new RPNCalculator().calculate(input.split(", ")));
+    Assertions.assertEquals(expected, new RPNCalculator().calculate(input));
   }
 
 
