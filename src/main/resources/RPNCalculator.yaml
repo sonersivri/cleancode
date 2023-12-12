@@ -1,0 +1,41 @@
+openapi: 3.0.2
+info:
+  title: RPN Calculator API
+  version: 1.0.0
+paths:
+  /calculate:
+    post:
+      summary: Calculate RPN expression
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expression:
+                  type: string
+                  description: RPN expression to be evaluated
+              required:
+                - expression
+      responses:
+        '200':
+          description: Successful calculation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: number
+                    description: Result of the RPN calculation
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message indicating the issue with calculation
