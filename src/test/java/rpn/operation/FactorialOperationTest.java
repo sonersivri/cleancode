@@ -7,22 +7,20 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-public class FactorialOperationTest {
+class FactorialOperationTest {
 
-    static Stream<Arguments> checkMultiArgumentsMethodSource() {
+  static Stream<Arguments> checkMultiArgumentsMethodSource() {
 
-        return Stream.of(
-                Arguments.of(1,0, Math.pow(0,1)),
-                Arguments.of(2,3,Math.pow(3,2)),
-                Arguments.of(2,4,Math.pow(4,2)),
-                Arguments.of(-4,-2,Math.pow(-2,-4)),
-                Arguments.of(-2,-3,Math.pow(-3,-2)),
-                Arguments.of(4,-2,Math.pow(-2,4))
-        );
-    }
-    @ParameterizedTest
-    @MethodSource("checkMultiArgumentsMethodSource")
-    void test(double exponent, double base, double expected) {
-        Assertions.assertEquals(expected, new PowerOperation().calculate(exponent, base));
-    }
+    return Stream.of(
+        Arguments.of(0,1),
+        Arguments.of(1,1),
+        Arguments.of(2,2),
+        Arguments.of(3,6)
+    );
+  }
+  @ParameterizedTest
+  @MethodSource("checkMultiArgumentsMethodSource")
+  void test(double first, double expected) {
+    Assertions.assertEquals(expected, new FactorialOperation().calculate(first));
+  }
 }

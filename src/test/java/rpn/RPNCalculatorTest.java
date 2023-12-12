@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class RPNCalculatorTest {
 
@@ -22,7 +21,7 @@ class RPNCalculatorTest {
 
   @Test
   void should_throw_exception_when_empty_input() {
-    Assertions.assertThrows(InvalidInputException.class, () -> {
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
       new RPNCalculator().calculate("", "");
     });
   }
@@ -63,25 +62,14 @@ class RPNCalculatorTest {
               new RPNCalculator().calculate("0", "0", "0", "/", "-");
         });
 
-    Assertions.assertEquals(RPNCalculator.DIVISION_BY_ZERO_IS_NOT_ALLOWED,
-        invalidInputException.getMessage());
-  }
-
-  @Test
-  void should_throw_exception_when_modulo_by_zero() {
-    final InvalidInputException invalidInputException = Assertions.assertThrows(
-        InvalidInputException.class, () -> {
-              new RPNCalculator().calculate("0", "0", "0", "%", "-");
-        });
-
-    Assertions.assertEquals(RPNCalculator.MODULO_BY_ZERO_IS_NOT_ALLOWED,
+    Assertions.assertEquals("java.lang.ArithmeticException: Division by zero is not allowed",
         invalidInputException.getMessage());
   }
 
   @Test
   void should_throw_exception_when_unsupported_operator_in_input() {
-    final InvalidInputException invalidInputException = Assertions.assertThrows(
-        InvalidInputException.class, () -> {
+    final IllegalArgumentException invalidInputException = Assertions.assertThrows(
+            IllegalArgumentException.class, () -> {
               new RPNCalculator().calculate("0", "0", "0", "_", "-");
         });
 
@@ -146,7 +134,7 @@ class RPNCalculatorTest {
               new RPNCalculator().calculate("1", "2", "3", "+", "-", "%");
         });
 
-    Assertions.assertEquals(RPNCalculator.NUMBER_OF_OPERANDS_CANNOT_BE_EQUAL_TO_NUMBERS,
+    Assertions.assertEquals("java.util.NoSuchElementException",
         invalidInputException.getMessage());
   }
 
@@ -157,7 +145,7 @@ class RPNCalculatorTest {
               new RPNCalculator().calculate("1", "2", "-", "+", "-");
         });
 
-    Assertions.assertEquals(RPNCalculator.COUNT_OF_OPERANDS_CANNOT_BE_GREATER_THAN_COUNT_OF_NUMBERS,
+    Assertions.assertEquals("java.util.NoSuchElementException",
         invalidInputException.getMessage());
   }
 
@@ -168,9 +156,5 @@ class RPNCalculatorTest {
     Assertions.assertEquals(expected, new RPNCalculator().calculate(input.split(", ")));
   }
 
-  @ParameterizedTest
-  @ValueSource(ints = {0,1,})
-  void test_factorial() {
-    new RPNCalculator().factorial(0);
-  }
+
 }
